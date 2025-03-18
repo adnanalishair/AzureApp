@@ -1,0 +1,36 @@
+name: Deploy .NET API to Azure (Windows)
+
+on:
+  push:
+    branches:
+      - main  # Change this if needed
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest  # ✅ Running on Windows
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'  # ✅ Use your .NET version
+
+    - name: Restore Dependencies
+      run: dotnet restore
+
+    - name: Build Project
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish Project
+      run: dotnet publish -c Release -o published
+
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: "AzureAppServiceLearning"  # Change this to your Azure App Name
+        slot-name: "production"
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: "published"
