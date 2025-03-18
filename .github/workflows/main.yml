@@ -3,7 +3,7 @@ name: Deploy .NET API to Azure (Windows)
 on:
   push:
     branches:
-      - main  # Change this if needed
+      - master  # Change this if needed
 
 jobs:
   build-and-deploy:
